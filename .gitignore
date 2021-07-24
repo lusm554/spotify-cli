@@ -1,4 +1,5 @@
 *.txt
+.env
 !requirements.txt
 # a simple http server to get the token
 get_token 
