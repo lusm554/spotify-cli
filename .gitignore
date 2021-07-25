@@ -1,4 +1,5 @@
 *.txt
+*.swp
 .env
 __pycache__
 !requirements.txt
