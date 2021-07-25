@@ -27,6 +27,10 @@ def stop():
 @main.command('next', help='play next')
 def next():
     pass
+    
+@main.command('curr', help='what track is playing now')
+def curr():
+    pass
 
 @main.command('prev', help='play previous track')
 def prev():
