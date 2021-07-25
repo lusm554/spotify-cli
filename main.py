@@ -10,9 +10,12 @@ def main():
     try:
         api = API(TOKEN)
     except ValueError as e:
-        print('The access token expired. U need to renew your token.')
-        # return status 126 when command is found but is not executable
-        exit(126)
+        msg = str(e)
+        print(msg)
+        if msg == 'The access token expired':
+            # return status 126 when command is found but is not executable
+            exit(126)
+        exit(1)
     print(f'You\'re logged in like {api.user["display_name"]}')
 
 
