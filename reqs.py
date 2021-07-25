@@ -12,7 +12,7 @@ class API:
         self.s = requests.Session()
         self.s.headers.update(self.headers)
         self.user = self.__user_current_profile__()
-        if 'error' in self.user and self.user['error']['status'] == 401:
+        if 'error' in self.user:
             raise ValueError(self.user['error']['message'])
 
     
@@ -31,3 +31,9 @@ class API:
         for k, v in json.items():
             print(k, v) 
     
+    def skip_to_next(self):
+        r = self.s.post(self.__url__('/player', '/next'))
+        if r.status_code != 204:
+            return r.json()
+        return r.status_code
+
