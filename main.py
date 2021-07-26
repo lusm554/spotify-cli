@@ -33,19 +33,26 @@ def __pretty__(track):
 
 @main.command('start', help='play track')
 def start():
-    pass
+    try:
+        track = api.current_playback()
+        api.start_resume_playback()
+    except ValueError as e:
+        print(e)
+        exit(1)
+    print('Now playing')
+    print(__pretty__(track))
 
 @main.command('stop', help='stop track')
 def stop():
     try:
         api.pause_playback()
         track = api.current_playback()
-        print(track)
     except ValueError as e:
         print(e)
         exit(1)
-    print('Stopped:')
+    print('Pause')
     print(__pretty__(track))
+
 
 def skip(action):
     '''Helper for skip methods'''
@@ -67,7 +74,7 @@ def skip(action):
             curr = next_track
             break
         time.sleep(1)
-    print('Now playing:')
+    print('Now playing')
     print(__pretty__(curr))
 
 @main.command('next', help='play next')
