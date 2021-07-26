@@ -49,4 +49,10 @@ class API:
         if r.status_code != 204:
             raise ValueError(r.json())
         return r.status_code
+    
+    def skip_to_previous(self):
+        r = self.s.post(self.__url__('/player', '/previous'))
+        if r.status_code != 204:
+            raise ValueError(f'Skip User\’s Playback To Previous Track {r.status_code}')
+        return r.status_code
 
