@@ -4,7 +4,6 @@ from reqs import API
 import time
 import os
 
-
 @click.group()
 def main():
     '''Set API SDK'''
@@ -68,7 +67,13 @@ def next():
     
 @main.command('curr', help='what track is playing now')
 def curr():
-    pass
+    try:
+        track = api.current_playback()
+    except ValueError as e:
+        print(e)
+        exit(1)
+    print('Pausing' if 'pausing' in track['actions']['disallows'] else 'Playing now')
+    print(__pretty__(track))
 
 @main.command('prev', help='play previous track')
 def prev():
