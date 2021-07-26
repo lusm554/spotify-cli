@@ -24,6 +24,12 @@ class API:
             raise ValueError(r.json())
         return r.json() 
 
+    def pause_playback(self):
+        r = self.s.get(self.__url__('/player', '/pause'))
+        if r.status_code != 204:
+            raise ValueError(f'Pause a User\'s Playback {r.status_code}')
+        return r.status_code
+
     def current_playback(self):
         r = self.s.get(self.__url__('/player')) 
         if r.status_code != 200:
