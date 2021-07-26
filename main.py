@@ -1,6 +1,7 @@
 import click
 from decouple import config as cfg
 from reqs import API
+import time
 
 @click.group()
 def main():
@@ -29,7 +30,21 @@ def stop():
 
 @main.command('next', help='play next')
 def next():
-    pass
+    try:
+        r = api.skip_to_next()
+        curr = api.current_playback()
+    except ValueError as e:
+        print(e)
+        exit(1)
+    curr_track_id = curr['item']['id']
+    while 1:
+        next_track = api.current_playback()
+        if curr_track_id != next_track['item']['id']:
+            curr = next_track
+            break
+        time.sleep(1.5)
+    print('Now playing:')
+    print('  {} - {}'.format(', '.join([i['name'] for i in curr['item']['artists']]), curr['item']['name']))
     
 @main.command('curr', help='what track is playing now')
 def curr():
