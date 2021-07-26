@@ -47,23 +47,36 @@ def stop():
     print('Stopped:')
     print(__pretty__(track))
 
-@main.command('next', help='play next')
-def next():
+def skip(action):
+    '''Helper for skip methods'''
+    _skip = api.skip_to_next if action=='next' else api.skip_to_previous
     try:
-        r = api.skip_to_next()
         curr = api.current_playback()
+        r = _skip()
     except ValueError as e:
         print(e)
         exit(1)
     curr_track_id = curr['item']['id']
     while 1:
-        next_track = api.current_playback()
+        try:
+            next_track = api.current_playback()
+        except ValueError as e:
+            print(e)
+            exit(1)
         if curr_track_id != next_track['item']['id']:
             curr = next_track
             break
-        time.sleep(1.5)
+        time.sleep(1)
     print('Now playing:')
     print(__pretty__(curr))
+
+@main.command('next', help='play next')
+def next():
+    skip('next')
+    
+@main.command('prev', help='play previous track')
+def prev():
+    skip('prev')
     
 @main.command('curr', help='what track is playing now')
 def curr():
@@ -75,9 +88,6 @@ def curr():
     print('Pausing' if 'pausing' in track['actions']['disallows'] else 'Playing now')
     print(__pretty__(track))
 
-@main.command('prev', help='play previous track')
-def prev():
-    pass
-
 if __name__ == '__main__':
     main(prog_name='spot')
+
