@@ -25,7 +25,7 @@ class API:
         return r.json() 
 
     def pause_playback(self):
-        r = self.s.get(self.__url__('/player', '/pause'))
+        r = self.s.put(self.__url__('/player', '/pause'))
         if r.status_code != 204:
             raise ValueError(f'Pause a User\'s Playback {r.status_code}')
         return r.status_code
