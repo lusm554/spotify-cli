@@ -9,3 +9,7 @@ See requirements.txt
 - Get [spotify token](https://developer.spotify.com/documentation/web-api/quick-start/)
 - Run `configure.sh` this way `. ./configure.sh` cos this should executes in the context of the current shell, not as a sub shell.
 - `spot --help` 
+
+# What needs to be improved
+- Make the script executable in a different way
+- Mechanism for automatic token renewal
