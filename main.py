@@ -4,15 +4,16 @@ from reqs import API
 import time
 import os
 
+
 @click.group()
 def main():
     '''Set API SDK'''
-    global api 
+    global api
     path_to_env = os.environ.get('SPOT_TOKEN_PATH')
     if not path_to_env:
         print('Set SPOT_TOKEN_PATH env')
         exit(1)
-    env = Config(RepositoryEnv(path_to_env)) 
+    env = Config(RepositoryEnv(path_to_env))
     TOKEN = env.get('TOKEN')
     try:
         api = API(TOKEN)
@@ -25,11 +26,15 @@ def main():
         exit(1)
     print(f'You\'re logged in like {api.user["display_name"]}')
 
+
 def __pretty__(track):
     '''Creats pretty form of track'''
     name = track['item']['name']
-    artists = ', '.join([artist['name'] for artist in track['item']['artists']])
+    artists = ', '.join(
+        [artist['name'] for artist in track['item']['artists']]
+    )
     return '  {} - {}'.format(artists, name)
+
 
 @main.command('start', help='play track')
 def start():
@@ -41,6 +46,7 @@ def start():
         exit(1)
     print('Now playing')
     print(__pretty__(track))
+
 
 @main.command('stop', help='stop track')
 def stop():
@@ -56,7 +62,7 @@ def stop():
 
 def skip(action):
     '''Helper for skip methods'''
-    _skip = api.skip_to_next if action=='next' else api.skip_to_previous
+    _skip = api.skip_to_next if action == 'next' else api.skip_to_previous
     try:
         curr = api.current_playback()
         r = _skip()
@@ -77,14 +83,17 @@ def skip(action):
     print('Now playing')
     print(__pretty__(curr))
 
+
 @main.command('next', help='play next')
 def next():
     skip('next')
-    
+
+
 @main.command('prev', help='play previous track')
 def prev():
     skip('prev')
-    
+
+
 @main.command('curr', help='what track is playing now')
 def curr():
     try:
@@ -92,9 +101,12 @@ def curr():
     except ValueError as e:
         print(e)
         exit(1)
-    print('Pausing' if 'pausing' in track['actions']['disallows'] else 'Playing now')
+    if 'pausing' in track['actions']['disallows']:
+        print('Pausing')
+    else:
+        print('Playing now')
     print(__pretty__(track))
+
 
 if __name__ == '__main__':
     main(prog_name='spot')
-
